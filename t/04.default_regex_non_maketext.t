@@ -1,4 +1,4 @@
-use Test::More tests => 18 + ( 3 * 5 );
+use Test::More tests => 21 + ( 3 * 5 );
 
 use Text::Extract::MaketextCallPhrases;
 
@@ -26,6 +26,10 @@ Yo Cpanel::Exception->new(
     'Ka boom next line no args [_1] [_2]', 37
     42
 ) Bar
+
+Cpanel::Exception::Foo->new('C E one more');
+Cpanel::Exception::Foo::Bar->new('C E two more');
+Cpanel::Exception::Foo::Bar::Baz->new('C E three more');
 END_EXAMP
 
 my $results = get_phrases_in_text($blob);
@@ -58,3 +62,6 @@ is( $results->[12]->{'phrase'}, "Ka boom no args",                     "Cpanel::
 is( $results->[13]->{'phrase'}, "Ka boom next line no args",           "Cpanel::Exception->new() next line no args" );
 is( $results->[14]->{'phrase'}, "Ka boom no args [_1]",                "Cpanel::Exception->new() one line w/ args" );
 is( $results->[15]->{'phrase'}, "Ka boom next line no args [_1] [_2]", "Cpanel::Exception->new() next line w/ args" );
+is( $results->[16]->{'phrase'}, "C E one more",                        "Cpanel::Exception::*->new() with one more NS chunk" );
+is( $results->[17]->{'phrase'}, "C E two more",                        "Cpanel::Exception::*->new() with two more NS chunks" );
+is( $results->[18]->{'phrase'}, "C E three more",                      "Cpanel::Exception::*->new() with three more NS chunks" );

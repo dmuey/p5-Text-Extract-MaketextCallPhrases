@@ -1,9 +1,12 @@
 Revision history for Text-Extract-MaketextCallPhrases
 
+???
+    - Allow for C::E subclasses
+
 0.92  2013-10-22 12:09:33
     - add more RELEASE_TESTING tests
     - add Cpanel::Exception->new top cpanel_mode parser
-    
+
 0.91  2013-03-21 07:40:45
     - account for tokens w/ trailing WS
     - add support for EOL '## no extract maketext' notation
