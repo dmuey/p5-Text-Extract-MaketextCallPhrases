@@ -44,11 +44,11 @@ sub get_phrases_in_text {
 
     # I like this alignment better than what tidy does, seems clearer to me even if a bit overkill perhaps
     #tidyoff
-    for my $regexp ( 
+    for my $regexp (
         $conf_hr->{'regexp_conf'} ? (
-                                        $conf_hr->{'no_default_regex'} ? @{ $conf_hr->{'regexp_conf'} } 
+                                        $conf_hr->{'no_default_regex'} ? @{ $conf_hr->{'regexp_conf'} }
                                                                        : ( $default_regexp_conf_item, @{ $conf_hr->{'regexp_conf'} } )
-                                    ) 
+                                    )
                                   : ($default_regexp_conf_item)
     ) {
     #tidyon
@@ -394,7 +394,7 @@ get_phrases_in_text() and get_phrases_in_file() are exported by default unless y
 
     use Text::Extract::MaketextCallPhrases ();
 
-=head1 INTERFACE 
+=head1 INTERFACE
 
 These functions return an array ref containing a "result hash" (described below) for each phrase found, in the order they appear in the original text.
 
@@ -428,7 +428,7 @@ It can also be a coderef that gets passed the string matched by item 1 and retur
 
 The regex should simply match and remain simple as it gets used by the parser where and as needed. Do not anchor or capture in it! If it is possible that there is space before the closing "whatever" you should include that too.
 
-   qr/\s*\>/ 
+   qr/\s*\>/
 
 =back
 
@@ -458,7 +458,7 @@ This is an array that gets aggregate debug info on matches that did not look lik
 Some examples of things that might match but would not :
 
     sub i_heart_maketext { 1 }
-    
+
     *i_heart_maketext = "foo";
 
     goto &xyz::maketext;
@@ -523,7 +523,7 @@ You should be able to match the result's exact instance of the phrase if you fin
 
 Chunk that matched the "maketext call" regex.
 
-=item 'regexp' 
+=item 'regexp'
 
 The array reference used to match this call/phrase. It is the same thing as each array ref passed in the regexp_conf list.
 
@@ -559,7 +559,7 @@ If the phrase is a warning or error this is a keyword that highlights why the pa
 
 The value can be:
 
-=over 4 
+=over 4
 
 =item undef/non-existent
 
