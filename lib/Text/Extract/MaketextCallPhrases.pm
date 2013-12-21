@@ -55,6 +55,8 @@ sub get_phrases_in_text {
         my $text_working_copy = $text;
         my $original_len      = length($text_working_copy);
 
+        my $conf_hr = defined $regexp->[2] && ref( $regexp->[2] ) eq 'HASH' ? $regexp->[2] : { 'optional' => 0 };
+
         while ( defined $text_working_copy && $text_working_copy =~ m/($regexp->[0]|## no extract maketext)/ ) {
             my $matched = $1;
 
@@ -93,7 +95,7 @@ sub get_phrases_in_text {
             }
 
             # ignore functions named *$1
-            if ( $text_working_copy =~ m/^\s*\{/ ) {
+            if ( $text_working_copy =~ m/^\s*\{/ && $matched !~ m/\(\s*$/ ) {
                 $result_hr->{'type'} = 'function';
                 $result_hr->{'line'} = $linenum if defined $linenum;
                 push @{ $conf_hr->{'debug_ignored_matches'} }, $result_hr;
@@ -120,6 +122,11 @@ sub get_phrases_in_text {
             }
 
             ( $phrase, $text_working_copy ) = Text::Balanced::extract_variable($text_working_copy);
+
+            my $optional_perlish =
+                $text_working_copy =~ m/^\s*\[/ ? "ARRAY"
+              : $text_working_copy =~ m/^\s*\{/ ? "HASH"
+              :                                   0;
 
             if ( !$phrase ) {
 
@@ -206,8 +213,13 @@ sub get_phrases_in_text {
                     }
 
                     if ($is_no_arg) {
-                        $result_hr->{'is_error'} = 1;
-                        $result_hr->{'type'}     = 'no_arg';
+                        if ( $conf_hr->{'optional'} ) {
+                            next;
+                        }
+                        else {
+                            $result_hr->{'is_error'} = 1;
+                            $result_hr->{'type'}     = 'no_arg';
+                        }
                     }
                     elsif ( $text_working_copy =~ m/^\s*(((?:\&|\\\*)?)$ns_regexp(?:\-\>$ns_regexp)?((?:\s*\()?))/o ) {
                         $phrase = $1;
@@ -243,12 +255,29 @@ sub get_phrases_in_text {
                 }
 
                 if ($is_no_arg) {
-                    $result_hr->{'is_error'} = 1;
-                    $result_hr->{'type'}     = 'no_arg';
+                    if ( $conf_hr->{'optional'} ) {
+                        next;
+                    }
+                    else {
+                        $result_hr->{'is_error'} = 1;
+                        $result_hr->{'type'}     = 'no_arg';
+                    }
                 }
                 else {
-                    $result_hr->{'is_warning'} = 1;
-                    $result_hr->{'type'}       = 'multiline';
+                    if ($optional_perlish) {
+                        if ( $conf_hr->{'optional'} ) {
+                            next;
+                        }
+                        else {
+                            $result_hr->{'is_warning'} = 1;
+                            $result_hr->{'type'}       = 'perlish';
+                            $phrase                    = $optional_perlish;
+                        }
+                    }
+                    else {
+                        $result_hr->{'is_warning'} = 1;
+                        $result_hr->{'type'}       = 'multiline';
+                    }
                 }
             }
             else {

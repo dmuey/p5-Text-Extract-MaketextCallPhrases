@@ -2,6 +2,7 @@ Revision history for Text-Extract-MaketextCallPhrases
 
 ???
     - Allow for C::E subclasses
+    - Add support for optional matches (needs POD and fix test #3 that broke)
 
 0.92  2013-10-22 12:09:33
     - add more RELEASE_TESTING tests

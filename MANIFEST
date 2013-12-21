@@ -10,6 +10,7 @@ t/02.get_phrases_in_file.t
 t/03.debug_ignored_matches.t
 t/04.default_regex_non_maketext.t
 t/05.no_extract_maketext.t
+t/06.3rd_arg_hr_optional.t
 t/perlcritic.t
 t/perltidy.t
 t/pkg-changes.t
