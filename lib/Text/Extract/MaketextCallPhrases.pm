@@ -55,7 +55,7 @@ sub get_phrases_in_text {
         my $text_working_copy = $text;
         my $original_len      = length($text_working_copy);
 
-        my $conf_hr = defined $regexp->[2] && ref( $regexp->[2] ) eq 'HASH' ? $regexp->[2] : { 'optional' => 0 };
+        my $rx_conf_hr = defined $regexp->[2] && ref( $regexp->[2] ) eq 'HASH' ? $regexp->[2] : { 'optional' => 0 };
 
         while ( defined $text_working_copy && $text_working_copy =~ m/($regexp->[0]|## no extract maketext)/ ) {
             my $matched = $1;
@@ -213,7 +213,7 @@ sub get_phrases_in_text {
                     }
 
                     if ($is_no_arg) {
-                        if ( $conf_hr->{'optional'} ) {
+                        if ( $rx_conf_hr->{'optional'} ) {
                             next;
                         }
                         else {
@@ -255,7 +255,7 @@ sub get_phrases_in_text {
                 }
 
                 if ($is_no_arg) {
-                    if ( $conf_hr->{'optional'} ) {
+                    if ( $rx_conf_hr->{'optional'} ) {
                         next;
                     }
                     else {
@@ -265,7 +265,7 @@ sub get_phrases_in_text {
                 }
                 else {
                     if ($optional_perlish) {
-                        if ( $conf_hr->{'optional'} ) {
+                        if ( $rx_conf_hr->{'optional'} ) {
                             next;
                         }
                         else {
@@ -437,7 +437,7 @@ The second optional argument is a hashref of options. It’s keys can be as foll
 
 =item 'regexp_conf'
 
-This should be an array reference. Each item in it should be an array reference with the following 2 items:
+This should be an array reference. Each item in it should be an array reference with at least the following 2 items:
 
 =over 4
 
@@ -459,11 +459,36 @@ The regex should simply match and remain simple as it gets used by the parser wh
 
    qr/\s*\>/
 
+=item 3 (Optional)
+
+A hashref to configure this particular token’s behavior.
+
+Keys are:
+
+=over 4
+
+=item 'optional'
+
+Default is false. When set to true, tokens not followed by a string are not included in the results (e.g. no_arg).
+
+    blah("I am howdy", [ …], {…}); # 'I am howdy'
+    blah([…],{…}); # usually included in the results w/ a type of 'perlish' but under optional => 1 it will not be included in the results
+
 =back
+
+=back
+
+Example:
 
     'regexp_conf' => [
         [ qr/greetings\+programs \|/, qr/\s*\|/ ],
         [ qr/\_\(?/, sub { return substr( $_[0], -1, 1 ) eq '(' ? qr/\s*\)/ : qr/\s*\;/ } ],
+    ],
+
+    'regexp_conf' => [
+        [ qr/greetings\+programs \|/, qr/\s*\|/ ],
+        [ qr/\_\(?/, sub { return substr( $_[0], -1, 1 ) eq '(' ? qr/\s*\)/ : qr/\s*\;/ } ],
+        { 'optional' => 1 }
     ],
 
 =item 'no_default_regex'
