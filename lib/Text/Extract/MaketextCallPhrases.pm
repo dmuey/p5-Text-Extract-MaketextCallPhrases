@@ -55,7 +55,8 @@ sub get_phrases_in_text {
         my $text_working_copy = $text;
         my $original_len      = length($text_working_copy);
 
-        my $rx_conf_hr = defined $regexp->[2] && ref( $regexp->[2] ) eq 'HASH' ? $regexp->[2] : { 'optional' => 0 };
+        my $rx_conf_hr = defined $regexp->[2] && ref( $regexp->[2] ) eq 'HASH' ? $regexp->[2] : { 'optional' => 0, 'arg_index' => 0 };
+        $rx_conf_hr->{arg_index} = exists $rx_conf_hr->{arg_index} ? int( abs( $rx_conf_hr->{arg_index} ) ) : 0;    # if caller passes a non-numeric value this should warn, that is a feature!
 
         while ( defined $text_working_copy && $text_working_copy =~ m/($regexp->[0]|## no extract maketext)/ ) {
             my $matched = $1;
@@ -121,8 +122,26 @@ sub get_phrases_in_text {
                 }
             }
 
-            ( $phrase, $text_working_copy ) = Text::Balanced::extract_variable($text_working_copy);
+            # phrase is argument N (instead of first)
+            if ( $rx_conf_hr->{'arg_index'} > 0 ) {
 
+                # hack away the args before the one at $arg_index
+                for my $at_index ( 1 .. $rx_conf_hr->{'arg_index'} ) {
+                    $text_working_copy =~ s{^\s*\,\s*}{};
+                    if ( $at_index >= $rx_conf_hr->{'arg_index'} ) {
+                        $result_hr->{'offset'} = $original_len - length($text_working_copy);
+                        last;
+                    }
+
+                    ( $phrase, $text_working_copy ) = Text::Balanced::extract_variable($text_working_copy);
+
+                    if ( !defined $phrase ) {
+                        ( $phrase, $text_working_copy ) = Text::Balanced::extract_quotelike($text_working_copy);
+                    }
+                }
+            }
+
+            ( $phrase, $text_working_copy ) = Text::Balanced::extract_variable($text_working_copy);
             my $optional_perlish =
                 $text_working_copy =~ m/^\s*\[/ ? "ARRAY"
               : $text_working_copy =~ m/^\s*\{/ ? "HASH"
@@ -441,7 +460,7 @@ This should be an array reference. Each item in it should be an array reference 
 
 =over 4
 
-=item 1
+=item 1st
 
 A regex object (i.e. qr()) that matches the beginning of the thing you are looking for.
 
@@ -449,7 +468,7 @@ The regex should simply match and remain simple as it gets used by the parser wh
 
    qr/\<cptext/
 
-=item 2
+=item 2nd
 
 A regex object (i.e. qr()) that matches the end of the thing you are looking for.
 
@@ -459,7 +478,7 @@ The regex should simply match and remain simple as it gets used by the parser wh
 
    qr/\s*\>/
 
-=item 3 (Optional)
+=item 3rd (Optional)
 
 A hashref to configure this particular token’s behavior.
 
