@@ -460,7 +460,7 @@ This should be an array reference. Each item in it should be an array reference 
 
 =over 4
 
-=item 1st
+=item First
 
 A regex object (i.e. qr()) that matches the beginning of the thing you are looking for.
 
@@ -468,7 +468,7 @@ The regex should simply match and remain simple as it gets used by the parser wh
 
    qr/\<cptext/
 
-=item 2nd
+=item Second
 
 A regex object (i.e. qr()) that matches the end of the thing you are looking for.
 
@@ -478,7 +478,7 @@ The regex should simply match and remain simple as it gets used by the parser wh
 
    qr/\s*\>/
 
-=item 3rd (Optional)
+=item Third (Optional)
 
 A hashref to configure this particular token’s behavior.
 
@@ -492,6 +492,20 @@ Default is false. When set to true, tokens not followed by a string are not incl
 
     blah("I am howdy", [ …], {…}); # 'I am howdy'
     blah([…],{…}); # usually included in the results w/ a type of 'perlish' but under optional => 1 it will not be included in the results
+
+=item 'arg_index'
+
+Default is 0.
+
+After the token match, the next thing (per L<Text::Balanced>) is typically the phrase. If that is not the case w/ a given token you can use arg_index to specify what position it takes in a list of arguments after the token as found by L<Text::Balanced>.
+
+For example:
+
+    mythingy('Merp', 'I am the phrase we want to parse.', 'foo')
+
+The list is 3 things: 'Merp', 'I am the phrase we want to parse.', and 'foo', indexed at 0, 1 , and 2 respectively.
+
+In that case you want to specify arg_index => 1 in order to find 'I am the phrase we want to parse.' instead of 'Merp'.
 
 =back
 
