@@ -55,8 +55,8 @@ sub get_phrases_in_text {
         my $text_working_copy = $text;
         my $original_len      = length($text_working_copy);
 
-        my $rx_conf_hr = defined $regexp->[2] && ref( $regexp->[2] ) eq 'HASH' ? $regexp->[2] : { 'optional' => 0, 'arg_index' => 0 };
-        $rx_conf_hr->{arg_index} = exists $rx_conf_hr->{arg_index} ? int( abs( $rx_conf_hr->{arg_index} ) ) : 0;    # if caller passes a non-numeric value this should warn, that is a feature!
+        my $rx_conf_hr = defined $regexp->[2] && ref( $regexp->[2] ) eq 'HASH' ? $regexp->[2] : { 'optional' => 0, 'arg_position' => 0 };
+        $rx_conf_hr->{arg_position} = exists $rx_conf_hr->{arg_position} ? int( abs( $rx_conf_hr->{arg_position} ) ) : 0;    # if caller passes a non-numeric value this should warn, that is a feature!
 
         while ( defined $text_working_copy && $text_working_copy =~ m/($regexp->[0]|## no extract maketext)/ ) {
             my $matched = $1;
@@ -123,12 +123,12 @@ sub get_phrases_in_text {
             }
 
             # phrase is argument N (instead of first)
-            if ( $rx_conf_hr->{'arg_index'} > 0 ) {
+            if ( $rx_conf_hr->{'arg_position'} > 0 ) {
 
-                # hack away the args before the one at $arg_index
-                for my $at_index ( 1 .. $rx_conf_hr->{'arg_index'} ) {
+                # hack away the args before the one at $arg_position
+                for my $at_index ( 1 .. $rx_conf_hr->{'arg_position'} ) {
                     $text_working_copy =~ s{^\s*\,\s*}{};
-                    if ( $at_index >= $rx_conf_hr->{'arg_index'} ) {
+                    if ( $at_index >= $rx_conf_hr->{'arg_position'} ) {
                         $result_hr->{'offset'} = $original_len - length($text_working_copy);
                         last;
                     }
@@ -493,19 +493,19 @@ Default is false. When set to true, tokens not followed by a string are not incl
     blah("I am howdy", [ …], {…}); # 'I am howdy'
     blah([…],{…}); # usually included in the results w/ a type of 'perlish' but under optional => 1 it will not be included in the results
 
-=item 'arg_index'
+=item 'arg_position'
 
-Default is 0.
+Default is not to use it but conceptually it is '1' as in “first”.
 
-After the token match, the next thing (per L<Text::Balanced>) is typically the phrase. If that is not the case w/ a given token you can use arg_index to specify what position it takes in a list of arguments after the token as found by L<Text::Balanced>.
+After the token match, the next thing (per L<Text::Balanced>) is typically the phrase. If that is not the case w/ a given token you can use arg_position to specify what position it takes in a list of arguments after the token as found by L<Text::Balanced>.
 
 For example:
 
     mythingy('Merp', 'I am the phrase we want to parse.', 'foo')
 
-The list is 3 things: 'Merp', 'I am the phrase we want to parse.', and 'foo', indexed at 0, 1 , and 2 respectively.
+The list is 3 things: 'Merp', 'I am the phrase we want to parse.', and 'foo', positioned at 1, 2 , and 3 respectively.
 
-In that case you want to specify arg_index => 1 in order to find 'I am the phrase we want to parse.' instead of 'Merp'.
+In that case you want to specify arg_position => 2 in order to find 'I am the phrase we want to parse.' instead of 'Merp'.
 
 =back
 
