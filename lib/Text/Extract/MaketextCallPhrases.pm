@@ -58,22 +58,15 @@ sub get_phrases_in_text {
         my $rx_conf_hr = defined $regexp->[2] && ref( $regexp->[2] ) eq 'HASH' ? $regexp->[2] : { 'optional' => 0, 'arg_position' => 0 };
         $rx_conf_hr->{arg_position} = exists $rx_conf_hr->{arg_position} ? int( abs( $rx_conf_hr->{arg_position} ) ) : 0;    # if caller passes a non-numeric value this should warn, that is a feature!
 
-        while ( defined $text_working_copy && $text_working_copy =~ m/($regexp->[0]|## no extract maketext)/ ) {
-            my $matched = $1;
+        $text_working_copy =~ s{^.*## no extract maketext.*$}{}gm;
 
-            # we have a (possibly multiline) chunk w/ notation-not-preceeded-by-token that we should ignore
-            if ( $matched eq '## no extract maketext' ) {
-                $text_working_copy =~ s/.*## no extract maketext[^\n]*//;
-                next;
-            }
+        while ( defined $text_working_copy && $text_working_copy =~ m/($regexp->[0])/ ) {
+            my $matched = $1;
 
             my $pre;
 
             # TODO: incorporate the \s* into results: 'post_token_ws' => $1 || '' ?
             ( $pre, $text_working_copy ) = split( m/$regexp->[0]\s*/, $text_working_copy, 2 );    # the \s* takes into account trailing WS that Text::Balanced ignores which then can throw off the offset
-
-            # we have a token line that we should ignore
-            next if $text_working_copy =~ s/^[^\n]*## no extract maketext[^\n]*//;
 
             my $offset = $original_len - length($text_working_copy);
 
