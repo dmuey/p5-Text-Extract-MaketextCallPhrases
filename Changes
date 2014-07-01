@@ -5,6 +5,7 @@ Revision history for Text-Extract-MaketextCallPhrases
     - Add support for optional matches
     - bump req ver of M::W to latest
     - Add support for getting matches in arguments besides the first
+    - Improve performance of "## no extract maketext" processing.
 
 0.92  2013-10-22 12:09:33
     - add more RELEASE_TESTING tests
