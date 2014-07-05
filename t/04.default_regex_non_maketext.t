@@ -1,4 +1,4 @@
-use Test::More tests => 21 + ( 3 * 5 );
+use Test::More tests => 23 + ( 3 * 5 );
 
 use Text::Extract::MaketextCallPhrases;
 
@@ -30,6 +30,10 @@ Yo Cpanel::Exception->new(
 Cpanel::Exception::Foo->new('C E one more');
 Cpanel::Exception::Foo::Bar->new('C E two more');
 Cpanel::Exception::Foo::Bar::Baz->new('C E three more');
+
+Cpanel::Exception::create("Herp::Derp");
+Cpanel::Exception::create("Herp::Derp", 'Please herp your derp!');
+Cpanel::Exception::create("Herp::Derp", 'The herp has been derped: [_1]', [$err]);
 END_EXAMP
 
 my $results = get_phrases_in_text($blob);
@@ -65,3 +69,7 @@ is( $results->[15]->{'phrase'}, "Ka boom next line no args [_1] [_2]", "Cpanel::
 is( $results->[16]->{'phrase'}, "C E one more",                        "Cpanel::Exception::*->new() with one more NS chunk" );
 is( $results->[17]->{'phrase'}, "C E two more",                        "Cpanel::Exception::*->new() with two more NS chunks" );
 is( $results->[18]->{'phrase'}, "C E three more",                      "Cpanel::Exception::*->new() with three more NS chunks" );
+
+# the first ::create w/out the optional phrase should not be in the result, which is true if these pass:
+is( $results->[19]->{'phrase'}, 'Please herp your derp!',         "C E ::create phrase no args" );
+is( $results->[20]->{'phrase'}, 'The herp has been derped: [_1]', "C E ::create phrase  w/ args" );

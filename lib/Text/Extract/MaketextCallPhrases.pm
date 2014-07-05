@@ -36,7 +36,7 @@ sub get_phrases_in_text {
 
     if ( $conf_hr->{'cpanel_mode'} && $conf_hr->{'cpanel_mode'} != 0 ) {
         $conf_hr->{'cpanel_mode'} = '0E0';
-        push @{ $conf_hr->{'regexp_conf'} }, [ qr/\<cptext[^\\]/, qr/\s*\>/ ], [ qr/(?:^|[^<])cptext\s*\(/, qr/\s*\)/ ], [ qr/Cpanel::Exception(?:::$ns_regexp)?->new\(/, qr/\s*\)/ ];
+        push @{ $conf_hr->{'regexp_conf'} }, [ qr/\<cptext[^\\]/, qr/\s*\>/ ], [ qr/(?:^|[^<])cptext\s*\(/, qr/\s*\)/ ], [ qr/Cpanel::Exception(?:::$ns_regexp)?->new\(/, qr/\s*\)/ ], [ qr/Cpanel::Exception::create\(/, qr/\s*\)/, { 'optional' => 1, 'arg_position' => 2 } ];
     }
 
     my @results;
