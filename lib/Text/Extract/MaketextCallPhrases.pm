@@ -9,7 +9,7 @@ use Text::Balanced      ();
 use String::Unquotemeta ();
 
 # So we don't have to maintain an identical regex
-use Module::Want 0.3 ();
+use Module::Want 0.6 ();
 my $ns_regexp = Module::Want::get_ns_regexp();
 
 sub import {
