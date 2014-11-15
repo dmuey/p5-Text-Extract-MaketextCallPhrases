@@ -3,7 +3,7 @@ package Text::Extract::MaketextCallPhrases;
 use strict;
 use warnings;
 
-$Text::Extract::MaketextCallPhrases::VERSION = '0.92';
+$Text::Extract::MaketextCallPhrases::VERSION = '0.93';
 
 use Text::Balanced      ();
 use String::Unquotemeta ();
@@ -19,7 +19,7 @@ sub import {
 }
 
 my $default_regexp_conf_item = [
-    qr/(?:(?:^|\:|\s|=|\()translatable|(?:make|lex)text(?:_[a-zA-Z0-9_]+_context)?)\s*\(?/,
+    qr/(?:(?:^|\:|\s|=|\(|\.)translatable|(?:make|lex)text(?:_[a-zA-Z0-9_]+_context)?)\s*\(?/,
     sub { return substr( $_[0], -1, 1 ) eq '(' ? qr/\s*\)/ : qr/\s*\;/ },
 ];
 
@@ -408,7 +408,7 @@ Text::Extract::MaketextCallPhrases - Extract phrases from maketext–call–look
 
 =head1 VERSION
 
-This document describes Text::Extract::MaketextCallPhrases version 0.92
+This document describes Text::Extract::MaketextCallPhrases version 0.93
 
 =head1 SYNOPSIS
 
