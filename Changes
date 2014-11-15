@@ -7,6 +7,7 @@ Revision history for Text-Extract-MaketextCallPhrases
     - Add support for getting matches in arguments besides the first
     - Add Cpanel::Exception.* ::create(NS,OPTIONAL-PHRASE) token
     - Add Cpanel::Exception.* ->create(OPTIONAL-PHRASE) token
+    - Add dot notation support to translatable() token (thanks tomgreen98)
 
 0.92  2013-10-22 12:09:33
     - add more RELEASE_TESTING tests
