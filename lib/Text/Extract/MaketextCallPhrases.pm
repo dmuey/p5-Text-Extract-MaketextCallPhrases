@@ -58,7 +58,8 @@ sub get_phrases_in_text {
         my $rx_conf_hr = defined $regexp->[2] && ref( $regexp->[2] ) eq 'HASH' ? $regexp->[2] : { 'optional' => 0, 'arg_position' => 0 };
         $rx_conf_hr->{arg_position} = exists $rx_conf_hr->{arg_position} ? int( abs( $rx_conf_hr->{arg_position} ) ) : 0;    # if caller passes a non-numeric value this should warn, that is a feature!
 
-        while ( defined $text_working_copy && $text_working_copy =~ m/($regexp->[0]|## no extract maketext)/ ) {
+        my $token_rx = qr/($regexp->[0]|## no extract maketext)/;
+        while ( defined $text_working_copy && $text_working_copy =~ m/$token_rx/ ) {
             my $matched = $1;
 
             # we have a (possibly multiline) chunk w/ notation-not-preceeded-by-token that we should ignore
