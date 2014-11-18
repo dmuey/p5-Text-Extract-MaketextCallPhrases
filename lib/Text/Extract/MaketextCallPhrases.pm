@@ -19,7 +19,7 @@ sub import {
 }
 
 my $default_regexp_conf_item = [
-    qr/(?:(?:^|\:|\s|=|\(|\.)translatable|(?:make|lex)text(?:_[a-zA-Z0-9_]+_context)?)\s*\(?/,
+    qr/(?:(?:^|\:|\s|=|\(|\.|\b)translatable|(?:make|lex)text(?:_[a-zA-Z0-9_]+_context)?)\s*\(?/,
     sub { return substr( $_[0], -1, 1 ) eq '(' ? qr/\s*\)/ : qr/\s*\;/ },
 ];
 

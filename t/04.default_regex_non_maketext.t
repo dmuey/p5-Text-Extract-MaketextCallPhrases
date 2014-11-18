@@ -1,4 +1,4 @@
-use Test::More tests => 35 + ( 3 * 5 );
+use Test::More tests => 37 + ( 3 * 5 );
 
 use Text::Extract::MaketextCallPhrases;
 
@@ -118,12 +118,15 @@ is( $results->[28]->{'phrase'}, 'foo I am method!', "C E with one more NS chunk 
 is( $results->[29]->{'phrase'}, 'bar I am method!', "C E with two more NS chunks ->create" );
 is( $results->[30]->{'phrase'}, 'baz I am method!', "C E with three more NS chunks ->create" );
 
-
 $blob = <<'END_EXAMP_2';
 object.translatable("Herp a Derp");
 object.translatable("Herp a Derp with substitution: [_1]");
+Blah translatable('howdy dooty')
+eval_evil("translatable('forp forp forp')")
 END_EXAMP_2
 
 $results = get_phrases_in_text($blob);
 is( $results->[0]->{'phrase'}, "Herp a Derp",                         ".translatable() aka JavaScript" );
 is( $results->[1]->{'phrase'}, "Herp a Derp with substitution: [_1]", ".translatable() aka JavaScript with a parameter" );
+is( $results->[2]->{'phrase'}, "howdy dooty",                         "translatable() preceded by space" );
+is( $results->[3]->{'phrase'}, "forp forp forp",                      "translatable() preceded by word break (straight quote)" );
