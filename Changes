@@ -1,6 +1,6 @@
 Revision history for Text-Extract-MaketextCallPhrases
 
-???
+0.93  2014-11-17 19:15:31
     - Allow for C::E subclasses
     - Add support for optional matches
     - bump req ver of M::W to latest
