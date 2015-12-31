@@ -12,6 +12,8 @@ use String::Unquotemeta ();
 use Module::Want 0.6 ();
 my $ns_regexp = Module::Want::get_ns_regexp();
 
+my $NO_EXTRACT_KEY = '## no extract maketext';
+
 sub import {
     no strict 'refs';    ## no critic
     *{ caller() . '::get_phrases_in_text' } = \&get_phrases_in_text;
@@ -58,23 +60,38 @@ sub get_phrases_in_text {
         my $rx_conf_hr = defined $regexp->[2] && ref( $regexp->[2] ) eq 'HASH' ? $regexp->[2] : { 'optional' => 0, 'arg_position' => 0 };
         $rx_conf_hr->{arg_position} = exists $rx_conf_hr->{arg_position} ? int( abs( $rx_conf_hr->{arg_position} ) ) : 0;    # if caller passes a non-numeric value this should warn, that is a feature!
 
-        my $token_rx = qr/($regexp->[0]|## no extract maketext)/;
-        while ( defined $text_working_copy && $text_working_copy =~ m/$token_rx/ ) {
-            my $matched = $1;
+        my $token_rx = qr/$regexp->[0]/;
+        my ($did_match, $matched, $no_extract_index);
+        while (1) {
+            last if !defined $text_working_copy;
 
-            # we have a (possibly multiline) chunk w/ notation-not-preceeded-by-token that we should ignore
-            if ( $matched eq '## no extract maketext' ) {
-                $text_working_copy =~ s/.*## no extract maketext[^\n]*//;
+            $did_match = $text_working_copy =~ $token_rx;
+
+            if ($did_match) {
+                $no_extract_index = index(
+                    substr($text_working_copy, 0, $+[0]),
+                    $NO_EXTRACT_KEY,
+                );
+                $matched = substr( $text_working_copy, $-[0], $+[0] - $-[0] );
+            }
+            else {
+                $no_extract_index = index( $text_working_copy, $NO_EXTRACT_KEY );
+                last if -1 == $no_extract_index;
+            }
+
+            # we have a (possibly multiline) chunk w/ notation-not-preceded-by-token that we should ignore
+            if ( -1 != $no_extract_index && (!$did_match || ($no_extract_index < $-[0])) ) {
+                $text_working_copy =~ s/.* \Q$NO_EXTRACT_KEY\E [^\n]*//x;
                 next;
             }
 
             my $pre;
 
             # TODO: incorporate the \s* into results: 'post_token_ws' => $1 || '' ?
-            ( $pre, $text_working_copy ) = split( m/$regexp->[0]\s*/, $text_working_copy, 2 );    # the \s* takes into account trailing WS that Text::Balanced ignores which then can throw off the offset
+            ( $pre, $text_working_copy ) = split( m/(?:$regexp->[0]|$NO_EXTRACT_KEY)\s*/, $text_working_copy, 2 );    # the \s* takes into account trailing WS that Text::Balanced ignores which then can throw off the offset
 
             # we have a token line that we should ignore
-            next if $text_working_copy =~ s/^[^\n]*## no extract maketext[^\n]*//;
+            next if $text_working_copy =~ s/^[^\n]* \Q$NO_EXTRACT_KEY\E [^\n]*//x;
 
             my $offset = $original_len - length($text_working_copy);
 
