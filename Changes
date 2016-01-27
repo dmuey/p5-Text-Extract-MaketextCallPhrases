@@ -1,5 +1,8 @@
 Revision history for Text-Extract-MaketextCallPhrases
 
+0.94  ???
+    - PR #6: Optimize by simplifying regular expression. (thanks FGasper!)
+
 0.93  2014-11-17 19:15:31
     - Allow for C::E subclasses
     - Add support for optional matches
