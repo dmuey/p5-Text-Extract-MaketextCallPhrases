@@ -61,7 +61,7 @@ sub get_phrases_in_text {
         $rx_conf_hr->{arg_position} = exists $rx_conf_hr->{arg_position} ? int( abs( $rx_conf_hr->{arg_position} ) ) : 0;    # if caller passes a non-numeric value this should warn, that is a feature!
 
         my $token_rx = qr/$regexp->[0]/;
-        my ($did_match, $matched, $no_extract_index);
+        my ( $did_match, $matched, $no_extract_index );
         while (1) {
             last if !defined $text_working_copy;
 
@@ -69,7 +69,7 @@ sub get_phrases_in_text {
 
             if ($did_match) {
                 $no_extract_index = index(
-                    substr($text_working_copy, 0, $+[0]),
+                    substr( $text_working_copy, 0, $+[0] ),
                     $NO_EXTRACT_KEY,
                 );
                 $matched = substr( $text_working_copy, $-[0], $+[0] - $-[0] );
@@ -80,7 +80,7 @@ sub get_phrases_in_text {
             }
 
             # we have a (possibly multiline) chunk w/ notation-not-preceded-by-token that we should ignore
-            if ( -1 != $no_extract_index && (!$did_match || ($no_extract_index < $-[0])) ) {
+            if ( -1 != $no_extract_index && ( !$did_match || ( $no_extract_index < $-[0] ) ) ) {
                 $text_working_copy =~ s/.* \Q$NO_EXTRACT_KEY\E [^\n]*//x;
                 next;
             }
