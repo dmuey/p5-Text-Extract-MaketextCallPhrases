@@ -3,7 +3,7 @@ package Text::Extract::MaketextCallPhrases;
 use strict;
 use warnings;
 
-$Text::Extract::MaketextCallPhrases::VERSION = '0.93';
+$Text::Extract::MaketextCallPhrases::VERSION = '0.94';
 
 use Text::Balanced      ();
 use String::Unquotemeta ();
@@ -427,7 +427,7 @@ Text::Extract::MaketextCallPhrases - Extract phrases from maketext–call–look
 
 =head1 VERSION
 
-This document describes Text::Extract::MaketextCallPhrases version 0.93
+This document describes Text::Extract::MaketextCallPhrases version 0.94
 
 =head1 SYNOPSIS
 
