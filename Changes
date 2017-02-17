@@ -2,6 +2,7 @@ Revision history for Text-Extract-MaketextCallPhrases
 
 0.94  ???
     - PR #6: Optimize by simplifying regular expression. (thanks FGasper!)
+    - Issue #8: Add qr/Cpanel::LocaleString->new\(\s*/ to cpanel_mode (for CPANEL-11303)
 
 0.93  2014-11-17 19:15:31
     - Allow for C::E subclasses

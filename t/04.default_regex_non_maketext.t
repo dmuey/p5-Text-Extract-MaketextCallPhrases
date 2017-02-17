@@ -1,4 +1,4 @@
-use Test::More tests => 37 + ( 3 * 5 );
+use Test::More tests => 41 + ( 3 * 5 );
 
 use Text::Extract::MaketextCallPhrases;
 
@@ -64,6 +64,14 @@ Cpanel::Exception::Foo::Bar->create('bar I am method!')
 
 Cpanel::Exception::Foo::Bar::Baz->create()
 Cpanel::Exception::Foo::Bar::Baz->create('baz I am method!')
+
+Cpanel::LocaleString->new("LS OBJ");
+Cpanel::LocaleString->new( "LS OBJ SPACE" );
+Cpanel::LocaleString->new( "LS OBJ ARGS", [1,2,3] );
+Cpanel::LocaleString->new(
+   "LS OBJ AFTER LINE",
+   [1,2,3]
+);
 END_EXAMP
 
 my $results = get_phrases_in_text($blob);
@@ -117,6 +125,11 @@ is( $results->[27]->{'phrase'}, 'I am method!',     "C E ->create" );
 is( $results->[28]->{'phrase'}, 'foo I am method!', "C E with one more NS chunk ->create" );
 is( $results->[29]->{'phrase'}, 'bar I am method!', "C E with two more NS chunks ->create" );
 is( $results->[30]->{'phrase'}, 'baz I am method!', "C E with three more NS chunks ->create" );
+
+is( $results->[31]->{'phrase'}, "LS OBJ",            "Cpanel::LocaleString->new() basic" );
+is( $results->[32]->{'phrase'}, "LS OBJ SPACE",      "Cpanel::LocaleString->new() w/ space" );
+is( $results->[33]->{'phrase'}, "LS OBJ ARGS",       "Cpanel::LocaleString->new() w/ args" );
+is( $results->[34]->{'phrase'}, "LS OBJ AFTER LINE", "Cpanel::LocaleString->new() w/ phrase on next line" );
 
 $blob = <<'END_EXAMP_2';
 object.translatable("Herp a Derp");
