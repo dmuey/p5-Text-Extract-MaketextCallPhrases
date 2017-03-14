@@ -377,13 +377,32 @@ sub get_phrases_in_file {
     my $prepend       = '';
     my $linenum       = 0;
     my $in_multi_line = 0;
+    my $offset        = 0;
     my $line;    # buffer
 
     while ( $line = readline($fh) ) {
         $linenum++;
 
         my $initial_result_count = @results;
-        push @results, map { $_->{'file'} = $file; $_->{'line'} = $in_multi_line ? $in_multi_line : $linenum; $_ } @{ get_phrases_in_text( $prepend . $line, $regex_conf, $linenum ) };
+        push @results, map {
+            $_->{'file'} = $file;
+            $_->{'line'} = $linenum;
+            if ($in_multi_line) {
+                $_->{'call_line'} = $in_multi_line;
+
+                my $index = rindex $prepend, $/;
+                if ( $index != -1 ) {
+                    while ( $index > $_->{'offset'} ) {
+                        $index = rindex $prepend, $/, $index - 1;
+                        --$_->{'line'};
+                    }
+                    $_->{'offset'} -= $index + 1;
+                }
+
+                $_->{'offset'} += $offset if $_->{'line'} == $in_multi_line;
+            }
+            $_
+        } @{ get_phrases_in_text( $prepend . $line, $regex_conf, $linenum ) };
         my $updated_result_count = @results;
 
         if ( $in_multi_line && $updated_result_count == $initial_result_count ) {
@@ -404,13 +423,15 @@ sub get_phrases_in_file {
             chomp $str;    # Don't count the EOL in the line length.
             my $length = bytes::length($str);
 
-            my $offset = $trailing_partial->{'offset'} > $length ? $length : $trailing_partial->{'offset'};
+            $offset = $trailing_partial->{'offset'} > $length ? $length : $trailing_partial->{'offset'};
             $prepend = $trailing_partial->{'matched'} . substr( "$prepend$line", $offset );
+            $offset -= length $trailing_partial->{'matched'};
             next;
         }
         else {
             $in_multi_line = 0;
             $prepend       = '';
+            $offset        = 0;
         }
     }
 

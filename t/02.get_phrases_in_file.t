@@ -35,20 +35,14 @@ is( $result_ar->[2]->{'offset'}, 9,                                             
 is( $result_ar->[2]->{'file'},   $filename,                                                           'multiple lines - file' );
 
 is( $result_ar->[3]->{'phrase'}, "A single line on a different line.", 'different, single line - phrase' );
-{
-    local $TODO = "Issue #10";
-    is( $result_ar->[3]->{'line'},   14, 'different, single line - line' );
-    is( $result_ar->[3]->{'offset'}, 4,  'different, single line - offset' );
-}
-is( $result_ar->[3]->{'file'}, $filename, 'different, single line - file' );
+is( $result_ar->[3]->{'line'},   14,                                   'different, single line - line' );
+is( $result_ar->[3]->{'offset'}, 4,                                    'different, single line - offset' );
+is( $result_ar->[3]->{'file'},   $filename,                            'different, single line - file' );
 
 is( $result_ar->[4]->{'phrase'}, "Multiple lines.\n\nAfter the maketext call.", 'different, multiple lines - phrase' );
-{
-    local $TODO = "Issue #10";
-    is( $result_ar->[4]->{'line'},   18, 'different, multiple lines - line' );
-    is( $result_ar->[4]->{'offset'}, 4,  'different, multiple lines - offset' );
-}
-is( $result_ar->[4]->{'file'}, $filename, 'different, multiple lines - file' );
+is( $result_ar->[4]->{'line'},   18,                                            'different, multiple lines - line' );
+is( $result_ar->[4]->{'offset'}, 4,                                             'different, multiple lines - offset' );
+is( $result_ar->[4]->{'file'},   $filename,                                     'different, multiple lines - file' );
 
 is( $result_ar->[5]->{'phrase'}, "Longer maketext call", 'object, one line - phrase' );
 is( $result_ar->[5]->{'line'},   23,                     'object, one line - line' );
@@ -56,20 +50,14 @@ is( $result_ar->[5]->{'offset'}, 27,                     'object, one line - off
 is( $result_ar->[5]->{'file'},   $filename,              'object, one line - file' );
 
 is( $result_ar->[6]->{'phrase'}, "Longer, two line\nmaketext call", 'object, two lines - phrase' );
-is( $result_ar->[6]->{'line'}, 25, 'object, two lines - line' );
-{
-    local $TODO = "Issue #10";
-    is( $result_ar->[6]->{'offset'}, 15, 'object, two lines - offset' );
-}
-is( $result_ar->[6]->{'file'}, $filename, 'object, two lines - file' );
+is( $result_ar->[6]->{'line'},   25,                                'object, two lines - line' );
+is( $result_ar->[6]->{'offset'}, 15,                                'object, two lines - offset' );
+is( $result_ar->[6]->{'file'},   $filename,                         'object, two lines - file' );
 
 is( $result_ar->[7]->{'phrase'}, "Longer maketext call with text on a separate line", 'object, different line - phrase' );
-{
-    local $TODO = "Issue #10";
-    is( $result_ar->[7]->{'line'},   29, 'object, different line - line' );
-    is( $result_ar->[7]->{'offset'}, 4,  'object, different line - offset' );
-}
-is( $result_ar->[7]->{'file'}, $filename, 'object, different line - file' );
+is( $result_ar->[7]->{'line'},   29,                                                  'object, different line - line' );
+is( $result_ar->[7]->{'offset'}, 4,                                                   'object, different line - offset' );
+is( $result_ar->[7]->{'file'},   $filename,                                           'object, different line - file' );
 
 # This should not be needed but just to be extra vigilant
 close $fh;
