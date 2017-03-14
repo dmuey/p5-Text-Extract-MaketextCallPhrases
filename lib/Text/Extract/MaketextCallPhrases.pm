@@ -400,7 +400,11 @@ sub get_phrases_in_file {
             my $trailing_partial = pop @results;
 
             require bytes;
-            my $offset = $trailing_partial->{'offset'} > bytes::length( $prepend . $line ) ? bytes::length( $prepend . $line ) : $trailing_partial->{'offset'};
+            my $str = "$prepend$line";
+            chomp $str;    # Don't count the EOL in the line length.
+            my $length = bytes::length($str);
+
+            my $offset = $trailing_partial->{'offset'} > $length ? $length : $trailing_partial->{'offset'};
             $prepend = $trailing_partial->{'matched'} . substr( "$prepend$line", $offset );
             next;
         }
