@@ -1,5 +1,8 @@
 Revision history for Text-Extract-MaketextCallPhrases
 
+0.95  ???
+    - Issue #10: Fix line & offset for multiline calls.
+
 0.94  2017-02-16 22:42:56
     - PR #6: Optimize by simplifying regular expression. (thanks FGasper!)
     - Issue #8: Add qr/Cpanel::LocaleString->new\(\s*/ to cpanel_mode (for CPANEL-11303)
