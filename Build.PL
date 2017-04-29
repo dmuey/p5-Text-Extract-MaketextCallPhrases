@@ -13,6 +13,11 @@ my $builder = Module::Build->new(
         'String::Unquotemeta' => 0,
         'Module::Want'        => '0.6',
     },
+    meta_merge => {
+        resources => {
+            repository => 'http://github.com/drmuey/p5-Text-Extract-MaketextCallPhrases',
+        },
+    },
     add_to_cleanup => ['Text-Extract-MaketextCallPhrases-*'],
 );
 
