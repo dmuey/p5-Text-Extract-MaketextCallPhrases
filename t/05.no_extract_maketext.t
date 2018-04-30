@@ -71,7 +71,7 @@ sub _str_with_double_notation {
 sub _str_with_notation {
     my $str = _str_without_notation();
 
-    $str =~ s/(sub maketext {)/$1 ## no extract maketext/;
+    $str =~ s/(sub maketext \{)/$1 ## no extract maketext/;
     $str =~ s/(maketext foo.*)/$1 ## no extract maketext/;
     $str =~ s/(odd maketext\()/$1 ## no extract maketext/;
 

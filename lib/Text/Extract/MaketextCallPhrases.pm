@@ -157,6 +157,7 @@ sub get_phrases_in_text {
                     if ( !defined $phrase ) {
                         ( $phrase, $text_working_copy ) = Text::Balanced::extract_quotelike($text_working_copy);
                     }
+                    $text_working_copy = '' unless defined $text_working_copy;
                 }
             }
 
